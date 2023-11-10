@@ -28,7 +28,7 @@ s3_client = boto3.client('s3',
                         region_name=os.getenv('AWS_DEFAULT_REGION'),
                         endpoint_url='https://blr1.digitaloceanspaces.com',
                         verify=False)
-
+s3_bucket_name = 'snap-bucket'
 
 
 db_params = {
@@ -51,7 +51,7 @@ def update_face_map_in_media_table(conn, faceMap,workspace):
             SET tags = %s
             WHERE id = %s AND workspace = %s;
             """
-            cursor.execute(update_query, (face_ids_array, image_id, workspace))
+            cursor.execute(update_query, (face_ids_array, image_id,workspace))
             print(f"Updated image_id: {image_id}")
         conn.commit()
     except Exception as e:
@@ -130,16 +130,14 @@ def unique_face_identifier(image_url, image_id):
     except Exception as e:
         print(f"Error processing image ID {image_id}: {e}")
 
-# Main function to process images and update the database
-def process_workspace_images(workspace):
+
+
+def ImageProcessUnique(workspace):
+    conn = None
     
-
-    # Connect to the database
-    conn = psycopg2.connect(**db_params)
-    face_map = {}
     query = 'SELECT * FROM public."Media" WHERE workspace = %s;'
-
     try:
+        conn = psycopg2.connect(**db_params)
         cursor = conn.cursor()
         cursor.execute(query, [workspace])
         rows = cursor.fetchall()
@@ -149,25 +147,33 @@ def process_workspace_images(workspace):
         for row in rows:
             image_url = url_prefix + row[2]
             unique_face_identifier(image_url, row[0])
-
-        update_face_map_in_media_table(conn, face_map,workspace)
+            
+        update_face_map_in_media_table(conn, faceMap,workspace)
     except Exception as e:
         print(f"Database or processing error: {e}")
     finally:
-        if conn:
+        if conn is not None:
             cursor.close()
             conn.close()
 
-# Call the main function with the workspace name
-if __name__ == "__main__":
-    import sys
-    s3_bucket_name = 'snap-bucket'
+        print("\nUnique face mapping to Photo IDs:")
+        for unique_id, photo_ids in unique_face_to_photos_map.items():
+            print(f"Unique ID: {unique_id}, Photo IDs: {photo_ids}")
 
-    # Expect the workspace name as the first argument to the script
-    
-    workspace_name = "Cs_bXqRsdhJXdCDsB7AoA"
-    process_workspace_images(workspace_name)
-    print("Done")
-    
-    
+        print("\nFace mapping to Photo IDs:")
+        for photo_id, face_ids in photo_to_unique_faces_map.items():
+            print(f"Photo ID: {photo_id}, Face IDs: {face_ids}")
+        
+        print("print : \n\nall unique ids")
+        for unique_id, photo_ids in unique_face_to_photos_map.items():
+            print(f"Unique ID: {unique_id}, Photo IDs: {photo_ids}")
+        #PhotoID : faces in photoID  
+        print("\n\n\nPhoto to Faces Mapping:")
+        for photo_id, face_ids in faceMap.items():
+            print(f"Photo ID: {photo_id}, Face IDs: {face_ids}")
+        
+
+workspace = "K4m5UNcfoo1mk5vj8NNAc"
+ImageProcessUnique(workspace)  
+
 
