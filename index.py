@@ -156,21 +156,7 @@ def ImageProcessUnique(workspace):
             cursor.close()
             conn.close()
 
-        print("\nUnique face mapping to Photo IDs:")
-        for unique_id, photo_ids in unique_face_to_photos_map.items():
-            print(f"Unique ID: {unique_id}, Photo IDs: {photo_ids}")
-
-        print("\nFace mapping to Photo IDs:")
-        for photo_id, face_ids in photo_to_unique_faces_map.items():
-            print(f"Photo ID: {photo_id}, Face IDs: {face_ids}")
-        
-        print("print : \n\nall unique ids")
-        for unique_id, photo_ids in unique_face_to_photos_map.items():
-            print(f"Unique ID: {unique_id}, Photo IDs: {photo_ids}")
-        #PhotoID : faces in photoID  
-        print("\n\n\nPhoto to Faces Mapping:")
-        for photo_id, face_ids in faceMap.items():
-            print(f"Photo ID: {photo_id}, Face IDs: {face_ids}")
+     
         
 
 workspace = "K4m5UNcfoo1mk5vj8NNAc"
