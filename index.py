@@ -172,6 +172,7 @@ def ImageProcessUnique(workspace):
         
 
 workspace = sys.argv[1]
+print("Workspace:", workspace)
 ImageProcessUnique(workspace)
 print("Done")
 
