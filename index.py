@@ -1,14 +1,12 @@
+import sys
 import boto3
 import psycopg2
-import cv2 as cv
 import face_recognition
-import numpy as np
 from PIL import Image
 from io import BytesIO
 import os
 import requests
 from dotenv import load_dotenv
-import json
 
 # Global variables to keep track of unique faces
 unique_faces_encodings = []
@@ -159,7 +157,9 @@ def ImageProcessUnique(workspace):
      
         
 
-workspace = "K4m5UNcfoo1mk5vj8NNAc"
-ImageProcessUnique(workspace)  
+workspace = sys.argv[1]
+print("Workspace:", workspace)
+ImageProcessUnique(workspace)
+print("Done")
 
 
