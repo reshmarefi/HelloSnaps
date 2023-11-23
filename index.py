@@ -1,3 +1,10 @@
+'''Created on November 2023 
+@author Reshma
+HelloSnaps Project 
+
+'''
+
+
 import sys
 import boto3
 import psycopg2
@@ -37,7 +44,7 @@ db_params = {
     'port': os.getenv('DB_PORT')
 }
 
-
+    
 def update_face_map_in_media_table(conn, faceMap,workspace):
     cursor = conn.cursor()
     try:
@@ -127,6 +134,7 @@ def unique_face_identifier(image_url, image_id):
 
     except Exception as e:
         print(f"Error processing image ID {image_id}: {e}")
+        
 
 
 
